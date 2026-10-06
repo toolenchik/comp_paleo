@@ -1,0 +1,5 @@
+# ANT 388 OBJECTIVES
+# 1. navigate command line
+# 2. use SHELL
+# 3. construct ontologies
+
