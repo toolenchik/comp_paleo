@@ -1,0 +1,227 @@
+Name: Saida Tokmurzina
+Date : September 18, 2026
+
+# 1.1
+Answers:
+1. #!/usr/bin/env bash is more portable, #!/bin/bash assumes bash is in /bin, which isn't the case always.
+2. chmod +x gives execute permission to the script. ./ wouldn't execute without chmod +x.
+3. ./ executes file directly (needs permission and uses shebang). bash *.sh runs with bash (doesn't need permission or use shepang).
+W hat is the difference between running ./hello_researcher.sh and bash hello_researcher.sh?
+
+# 1.2
+Output:
+Researcher: saidatokmurzina
+Date: 2026-09-15
+Dataset: otb_fossils.tsv
+Row count:     1243
+
+# 1.3
+Output:
+=====================================
+File:    otb_fossils.tsv
+Rows:        1242 (excluding header)
+Columns:       30
+Header fields:
+     1	catalog_number
+     2	organism_id
+     3	preparations
+     4	year
+     5	discovered_by
+     6	continent
+     7	country
+     8	state_province
+     9	region
+    10	subregion
+    11	place
+    12	locality
+    13	earliest_period_or_lowest_system
+    14	latest_period_or_highest_system
+    15	earliest_epoch_or_lowest_series
+    16	latest_epoch_or_highest_series
+    17	earliest_age_or_lowest_stage
+    18	latest_age_or_highest_stage
+    19	formation
+    20	member
+    21	bed
+    22	scientific_name
+    23	identification_qualifier
+    24	date_identified
+    25	verbatim_identification
+    26	verbatim_chronometric_age
+    27	earliest_chronometric_age
+    28	earliest_chronometric_age_reference_system
+    29	latest_chronometric_age
+    30	latest_chronometric_age_reference_system
+=====================================
+
+Answers:
+1. $0 contains the name used to run the script (dataset_info.sh).
+2. $# contains the number of all arguments provided after the script name.
+3. exit 1 stops the scripts and reports error. 1 means error.
+4. Output:
+=====================================
+File:    otb_fossils.tsv
+Rows:        1242 (excluding header)
+Columns:       30
+Header fields:
+     1	catalog_number
+     2	organism_id
+     3	preparations
+     4	year
+     5	discovered_by
+     6	continent
+     7	country
+     8	state_province
+     9	region
+    10	subregion
+    11	place
+    12	locality
+    13	earliest_period_or_lowest_system
+    14	latest_period_or_highest_system
+    15	earliest_epoch_or_lowest_series
+    16	latest_epoch_or_highest_series
+    17	earliest_age_or_lowest_stage
+    18	latest_age_or_highest_stage
+    19	formation
+    20	member
+    21	bed
+    22	scientific_name
+    23	identification_qualifier
+    24	date_identified
+    25	verbatim_identification
+    26	verbatim_chronometric_age
+    27	earliest_chronometric_age
+    28	earliest_chronometric_age_reference_system
+    29	latest_chronometric_age
+    30	latest_chronometric_age_reference_system
+=====================================
+
+
+# 2.3
+Output:
+Validating: /Users/saidatokmurzina/comp_paleo/part01_OS/week04/otb_fossils.tsv
+Expected columns: 30
+---
+PASS: header has 30 columns
+INFO: 1242 data rows (plus 1 header)
+PASS: all rows have 30 columns
+
+Answers:
+1. $((ERRORS + 1)) adds one to the current number of ERRORS. It's an arithmetic expression.
+2. It uses exit 0 for success b/c there were 0 errors in the code. exit 1 occurs when there is 1 error.
+3. Output:
+Validating: otb_fossils.tsv
+Expected columns: 5
+---
+FAIL: header has 30 columns (expected 5)
+INFO: 1242 data rows (plus 1 header)
+FAIL: 1244 row(s) have wrong column count
+      First 5 offending line numbers:
+  Line 1 has 30 columns
+  Line 2 has 30 columns
+  Line 3 has 30 columns
+  Line 4 has 30 columns
+  Line 5 has 30 columns
+---
+RESULT: FAILED (2 errors)
+
+4.
+Output:
+Validating: otb_fossils.tsv
+Expected columns: 5
+---
+FAIL: header has 30 columns (expected 5)
+INFO: 1242 data rows (plus 1 header)
+FAIL: 1244 row(s) have wrong column count
+First offending row:
+Line 1 has 30 columns:
+catalog_number	organism_id	preparations	year	discovered_by	continent	country	state_province	region	subregion	place	locality	earliest_period_or_lowest_system	latest_period_or_highest_system	earliest_epoch_or_lowest_series	latest_epoch_or_highest_series	earliest_age_or_lowest_stage	latest_age_or_highest_stage	formation	member	bed	scientific_name	identification_qualifier	date_identified	verbatim_identification	verbatim_chronometric_age	earliest_chronometric_age	earliest_chronometric_age_reference_system	latest_chronometric_age	latest_chronometric_age_reference_system
+
+echo "First offending row:"
+
+    awk -F'\t' -v cols="$EXPECTED_COLS" \
+        'NF != cols {
+            print "Line", NR, "has", NF, "columns:"
+            print $0
+            exit
+        }' "$FILEPATH"
+
+# 3.1
+Output:
+Specimen counts by formation
+Dataset: otb_fossils.tsv
+================================
+Koobi Fora            591
+Shungura              258
+Nachukui              182
+Nawata                2
+Kanapoi               188
+Usno                  22
+================================
+TOTAL                 1242
+
+Answer:
+tail -n +2 otb_fossils |cut -f 19|sort |uniq -c |sort -nr
+It would be better to extract formation names directly from the file, not the script. This method automatically counts new formations when added and avoids editing of the script.
+
+# 3.2
+Output:
+Found 2 TSV file(s) in: /Users/saidatokmurzina/comp_paleo/part01_OS/week04
+
+Filename                                 Rows   Columns
+--------                                 ----   -------
+eppe_fossils.tsv                        13716        31
+otb_fossils.tsv                          1242        30
+
+Answers:
+1. 2>/dev/null is useful here because if the directory contains no .tsv files, ls would normally print an error. With 2>/dev/null, that message is hidden, and TSV_COUNT becomes 0. The error (2) is redirected to /dev/null, which discards anything sent to it.
+2. If there are no .tsv files in the dir, the script will print "No TSV files found in: $DIRPATH"
+3. No TSV files found in: /Users/saidatokmurzina/comp_paleo/part01_OS/week03
+
+# 3.3
+Output:
+Checking catalog numbers in: eppe_fossils.tsv
+Expected prefix: 'EP '
+Check complete. Problems logged to: bad_catalog_numbers.log
+
+Answers:
+1. IFS=$'\t' tells read that fields are separated by tabs. The first field goes into CATALOG_NUM, and the remaining fields go into REST.
+-r keeps backslashes unchanged.IFS means input field separator, which is set to tab deliminated here, because the file is tab deliminated.
+2. [[ "$CATALOG_NUM" != "$PREFIX"* ]] checks whether the catalog number does not start with the prefix. [[ ]] supports pattern matching (*) safely.
+3. tee -a "$LOG_FILE" prints the message on screen and appends it to the log. Simple redirection writes only to the file.
+4. Bash normally runs the loop in a subshell --> Changes to BAD_COUNT disappear when the loop ends.
+lastpipe bash and the process substitution pattern run the script in the current shell, so BAD_COUNT remains available afterward.
+
+# 4
+Output:
+Dataset Report
+Directory: /Users/saidatokmurzina/comp_paleo/part01_OS/week04
+Generated: 2026-09-18
+============================================================
+
+File: eppe_fossils.tsv
+  Rows:    13716
+  Columns: 31
+  Fields:  catalog_number | institution_code | collection_code
+  Validation: PASS
+
+File: otb_fossils.tsv
+  Rows:    1243
+  Columns: 30
+  Fields:  catalog_number | organism_id | preparations
+  Validation: PASS
+
+============================================================
+Summary
+  Files processed: 2
+  Total rows:      14959
+  Small files:     0
+  Overall result:  PASS
+
+# 5
+Answers:
+1. python allows spaces between =, and doesn't need to call variables with $ unlike command Line
+2. bash uses do and done, python uses colons
+3. indentation in python signals that a particular line of code belongs to a function/loop. in bash it is done with do/done or if/fi
+4. enumerate(reader) goes through the file one row at a time and gives each row a number. There are two variables because the counting begins with 0
+5. python function captures arguments with parentheses. Three arguments are expected because script =0, input =1, output =2 --> 3 in total
