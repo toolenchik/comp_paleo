@@ -33,7 +33,7 @@ python3 fix_newlines.py eppe_fossils.csv eppe_fossils.tsv
 ```
 
 ## Data — where to obtain the datasets the scripts expect (PBDB API URL, Origins database URL)
-otb_fossils.tsv`: Omo-Turkana Basin specimens Source: https://paleocore.org/origins/
+otb_fossils.tsv: Omo-Turkana Basin specimens Source: https://paleocore.org/origins/
 eppe_fossils.csv: EPPE specimens Source: https://paleobiodb.org/data1.2/
 
 ## Author name and contact
