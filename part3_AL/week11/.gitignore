@@ -1,0 +1,4 @@
+config.py
+.venv/
+__pycache__/
+otb_fossils.csv
